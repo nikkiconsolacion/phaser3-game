@@ -73,6 +73,7 @@ function create() {
 
   player.setBounce(0.2); //player will slightly bounce after landing
   player.setCollideWorldBounds(true);
+  player.body.setGravityY(200)
 
   //animations
   this.anims.create({
@@ -105,21 +106,22 @@ function create() {
 function update() {
   if (cursors.left.isDown) {
     player.setVelocityX(-160);
-
     player.anims.play('left', true);
   }
   else if (cursors.right.isDown) {
     player.setVelocityX(160);
-
     player.anims.play('right', true);
   }
   else {
     player.setVelocityX(0);
-
     player.anims.play('turn');
   }
-
-  if (cursors.up.isDown && player.body.touching.down) {
-    player.setVelocityY(-330);
+  // if (cursors.up.isDown && player.body.touching.down) {
+  //   //player can only jump off the ground
+  //   player.setVelocityY(-430);
+  // }
+  if (cursors.up.isDown) {
+    //player can jump mid air
+    player.setVelocityY(-200);
   }
 }
