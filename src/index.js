@@ -44,6 +44,7 @@ function preload() {
   this.load.image('ground', 'src/assets/platform.png');
   this.load.image('star', 'src/assets/star.png');
   this.load.image('bomb', 'src/assets/bomb.png');
+  this.load.image('button', 'src/assets/reset.png', { frameWidth: 132, frameHeight: 48 });
   this.load.spritesheet('dude', 'src/assets/dude.png', { frameWidth: 32, frameHeight: 48 }); //spritesheet contains animation frames
 }
 
@@ -54,8 +55,11 @@ let bombs;
 let platforms;
 let cursors;
 let score = 0;
+let highScore = 0;
 let gameOver = false;
 let scoreText;
+let highScoreText;
+let button;
 
 function create() {
   //Note: order matters
@@ -111,15 +115,16 @@ function create() {
   //bombs
   bombs = this.physics.add.group();
 
-  let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+  let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400); //bomb drops on opposite side of screen as player
   let bomb = bombs.create(x, 16, 'bomb');
   bomb.setBounce(1);
   bomb.setCollideWorldBounds(true);
   bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
   bomb.allowGravity = false;
 
-  //score diplayed
+  //scores diplayed
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+  highScoreText = this.add.text(480, 16, 'high score: 0', { fontSize: '32px', fill: '#000' });
 
   //Collisions
   this.physics.add.collider(player, platforms);
@@ -135,6 +140,20 @@ function create() {
 
 function update() {
   if (gameOver) {
+    //reset button
+    button = this.add.image(400, 300, 'button');
+    button.setScale(.07);
+    button.setInteractive();
+    button.on('pointerup', () => {
+      //set high score
+      if(score > highScore){
+        highScore = score;
+        highScoreText.setText('high score: ' + highScore);
+      }
+      //reset score
+      score = 0;
+      scoreText.setText('score: ' + score);
+    });
     return;
   }
 
@@ -165,7 +184,7 @@ function collectStar (player, star) {
   //disables the star body and adds to score
   star.disableBody(true, true);
   score += 10;
-  scoreText.setText('Score: ' + score);
+  scoreText.setText('score: ' + score);
 
   if (stars.countActive(true) === 0) {
     //  A new batch of stars to collect
@@ -188,3 +207,4 @@ function hitBomb (player, bomb) {
   player.anims.play('turn');
   gameOver = true;
 }
+
