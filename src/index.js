@@ -49,6 +49,7 @@ function preload() {
 
 //variables
 let player;
+let stars;
 let platforms;
 let cursors;
 
@@ -99,8 +100,22 @@ function create() {
   //keyboard function (up, down, left, right)
   cursors = this.input.keyboard.createCursorKeys();
 
+  //stars
+  stars = this.physics.add.group({
+    key: 'star',
+    repeat: 11,
+    setXY: { x: 12, y: 0, stepX: 70 }
+  });
+
+  stars.children.iterate(function (child) {
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  });
+
   //Collisions
   this.physics.add.collider(player, platforms);
+  this.physics.add.collider(stars, platforms);
+
+  this.physics.add.overlap(player, stars, collectStar, null, this); //when player runs over stars, collect them
 }
 
 function update() {
@@ -116,12 +131,17 @@ function update() {
     player.setVelocityX(0);
     player.anims.play('turn');
   }
-  // if (cursors.up.isDown && player.body.touching.down) {
-  //   //player can only jump off the ground
-  //   player.setVelocityY(-430);
-  // }
-  if (cursors.up.isDown) {
-    //player can jump mid air
-    player.setVelocityY(-200);
+  if (cursors.up.isDown && player.body.touching.down) {
+    //player can only jump off the ground
+    player.setVelocityY(-430);
   }
+  // if (cursors.up.isDown) {
+  //   //player can jump mid air
+  //   player.setVelocityY(-200);
+  // }
+}
+
+function collectStar (player, star) {
+  //disables the star body
+  star.disableBody(true, true);
 }
