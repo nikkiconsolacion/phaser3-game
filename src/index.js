@@ -92,4 +92,7 @@ function create () {
       frameRate: 10,
       repeat: -1
   });
+
+  //Collisions
+  this.physics.add.collider(player, platforms);
 }
