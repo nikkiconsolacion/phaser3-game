@@ -117,6 +117,7 @@ function create() {
 
   let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400); //bomb drops on opposite side of screen as player
   let bomb = bombs.create(x, 16, 'bomb');
+  bomb.setScale(1.5);
   bomb.setBounce(1);
   bomb.setCollideWorldBounds(true);
   bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
@@ -194,6 +195,7 @@ function collectStar (player, star) {
     //A new bomb drops each round
     let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
     let newBomb = bombs.create(x, 16, 'bomb');
+    newBomb.setScale(1.5);
     newBomb.setBounce(1);
     newBomb.setCollideWorldBounds(true);
     newBomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
