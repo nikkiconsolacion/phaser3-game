@@ -75,9 +75,13 @@ function create() {
   platforms.create(750, 220, 'ground');
 
   //reset button
-  button = this.add.image(380, 30, 'button');
+  button = this.add.image(370, 30, 'button');
   button.setScale(.03);
   button.setInteractive();
+
+  //scores diplayed
+  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+  highScoreText = this.add.text(480, 16, 'high score: 0', { fontSize: '32px', fill: '#000' });
 
   //dynamic player
   player = this.physics.add.sprite(100, 450, 'dude');
@@ -127,10 +131,6 @@ function create() {
   bomb.setCollideWorldBounds(true);
   bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
   bomb.allowGravity = false;
-
-  //scores diplayed
-  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-  highScoreText = this.add.text(480, 16, 'high score: 0', { fontSize: '32px', fill: '#000' });
 
   //Collisions
   this.physics.add.collider(player, platforms);
