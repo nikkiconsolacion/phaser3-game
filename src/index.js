@@ -43,15 +43,20 @@ function preload () {
   this.load.image('ground', 'src/assets/platform.png');
   this.load.image('star', 'src/assets/star.png');
   this.load.image('bomb', 'src/assets/bomb.png');
-  this.load.spritesheet('dude', 'src/assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+  this.load.spritesheet('dude', 'src/assets/dude.png', { frameWidth: 32, frameHeight: 48 }); //spritesheet contains animation frames
 }
+
+//variables
 let player;
 let platforms;
 
 function create () {
-  //order matters
+  //Note: order matters
+
+  //background
   this.add.image(400, 300, 'sky');
 
+  //foreground platforms
   platforms = this.physics.add.staticGroup();
 
   platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -60,16 +65,19 @@ function create () {
   platforms.create(50, 250, 'ground');
   platforms.create(750, 220, 'ground');
 
+
+  //dynamic player
   player = this.physics.add.sprite(100, 450, 'dude');
 
-  player.setBounce(0.2);
+  player.setBounce(0.2); //player will slightly bounce after landing
   player.setCollideWorldBounds(true);
 
+  //animations
   this.anims.create({
       key: 'left',
-      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
+      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }), //frames 0, 1, 2, 3
+      frameRate: 10, //10fps
+      repeat: -1 //loop
   });
 
   this.anims.create({
