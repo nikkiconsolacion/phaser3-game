@@ -74,6 +74,11 @@ function create() {
   platforms.create(50, 250, 'ground');
   platforms.create(750, 220, 'ground');
 
+  //reset button
+  button = this.add.image(380, 30, 'button');
+  button.setScale(.03);
+  button.setInteractive();
+
   //dynamic player
   player = this.physics.add.sprite(100, 450, 'dude');
   player.setBounce(0.2); //player will slightly bounce after landing
@@ -99,11 +104,6 @@ function create() {
       repeat: -1
   });
 
-  //reset button
-  button = this.add.image(380, 30, 'button');
-  button.setScale(.03);
-  button.setInteractive();
-
   //keyboard function (up, down, left, right)
   cursors = this.input.keyboard.createCursorKeys();
 
@@ -122,7 +122,7 @@ function create() {
 
   let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400); //bomb drops on opposite side of screen as player
   let bomb = bombs.create(x, 16, 'bomb');
-  bomb.setScale(1.5);
+  bomb.setScale(1.7);
   bomb.setBounce(1);
   bomb.setCollideWorldBounds(true);
   bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
@@ -145,23 +145,6 @@ function create() {
 }
 
 function update() {
-  // if (gameOver) {
-  //   //reset button
-  //   // button = this.add.image(400, 300, 'button');
-  //   // button.setScale(.07);
-  //   // button.setInteractive();
-  //   button.on('pointerdown', () => {
-  //     //set high score
-  //     if(score > highScore){
-  //       highScore = score;
-  //       highScoreText.setText('high score: ' + highScore);
-  //     }
-  //     //reset score
-  //     score = 0;
-  //     scoreText.setText('score: ' + score);
-  //   });
-  //   return;
-  // }
 
   //player movement
   if (cursors.left.isDown) {
@@ -200,7 +183,7 @@ function collectStar (player, star) {
     //A new bomb drops each round
     let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
     let newBomb = bombs.create(x, 16, 'bomb');
-    newBomb.setScale(1.5);
+    newBomb.setScale(1.7);
     newBomb.setBounce(1);
     newBomb.setCollideWorldBounds(true);
     newBomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
@@ -213,17 +196,32 @@ function hitBomb (player, bomb) {
   player.setTint(0xff0000); //turns the player red
   player.anims.play('turn');
   gameOver = true;
+
+  //when reset button is clicked, reset game but keep high score
   button.on('pointerdown', () => {
     //set high score
     if(score > highScore){
       highScore = score;
       highScoreText.setText('high score: ' + highScore);
     }
-    //reset score
+    //reset
     score = 0;
     scoreText.setText('score: ' + score);
     this.physics.resume();
     player.clearTint();
+    bombs.clear(true);
+    //new stars on reset
+    stars.children.iterate(function (child) {
+      child.enableBody(true, child.x, 0, true, true);
+    });
+    //new bomb on reset
+    let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+    let newBomb2 = bombs.create(x, 16, 'bomb');
+    newBomb2.setScale(1.7);
+    newBomb2.setBounce(1);
+    newBomb2.setCollideWorldBounds(true);
+    newBomb2.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    newBomb2.allowGravity = false;
   });
 }
 
