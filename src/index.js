@@ -52,6 +52,8 @@ let player;
 let stars;
 let platforms;
 let cursors;
+let score = 0;
+let scoreText;
 
 function create() {
   //Note: order matters
@@ -61,35 +63,29 @@ function create() {
 
   //foreground platforms
   platforms = this.physics.add.staticGroup();
-
   platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
   platforms.create(600, 400, 'ground');
   platforms.create(50, 250, 'ground');
   platforms.create(750, 220, 'ground');
 
-
   //dynamic player
   player = this.physics.add.sprite(100, 450, 'dude');
-
   player.setBounce(0.2); //player will slightly bounce after landing
   player.setCollideWorldBounds(true);
   player.body.setGravityY(200)
 
-  //animations
+  //player animations
   this.anims.create({
       key: 'left',
       frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }), //frames 0, 1, 2, 3
       frameRate: 10, //10fps
       repeat: -1 //loop
   });
-
   this.anims.create({
       key: 'turn',
       frames: [ { key: 'dude', frame: 4 } ],
       frameRate: 20
   });
-
   this.anims.create({
       key: 'right',
       frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
@@ -106,19 +102,23 @@ function create() {
     repeat: 11,
     setXY: { x: 12, y: 0, stepX: 70 }
   });
-
   stars.children.iterate(function (child) {
     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
   });
+
+  //score diplayed
+  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
   //Collisions
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(stars, platforms);
 
+  //Overlap
   this.physics.add.overlap(player, stars, collectStar, null, this); //when player runs over stars, collect them
 }
 
 function update() {
+  //player movement
   if (cursors.left.isDown) {
     player.setVelocityX(-160);
     player.anims.play('left', true);
@@ -142,6 +142,8 @@ function update() {
 }
 
 function collectStar (player, star) {
-  //disables the star body
+  //disables the star body and adds to score
   star.disableBody(true, true);
+  score += 10;
+  scoreText.setText('Score: ' + score);
 }
