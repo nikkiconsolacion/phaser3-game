@@ -15,7 +15,8 @@ const config = {
   },
   scene: {
     preload: preload,
-    create: create
+    create: create,
+    update: update
   }
 };
 
@@ -38,7 +39,7 @@ const game = new Phaser.Game(config);
 //   });
 // }
 
-function preload () {
+function preload() {
   this.load.image('sky', 'src/assets/sky.png');
   this.load.image('ground', 'src/assets/platform.png');
   this.load.image('star', 'src/assets/star.png');
@@ -49,8 +50,9 @@ function preload () {
 //variables
 let player;
 let platforms;
+let cursors;
 
-function create () {
+function create() {
   //Note: order matters
 
   //background
@@ -93,6 +95,31 @@ function create () {
       repeat: -1
   });
 
+  //keyboard function (up, down, left, right)
+  cursors = this.input.keyboard.createCursorKeys();
+
   //Collisions
   this.physics.add.collider(player, platforms);
+}
+
+function update() {
+  if (cursors.left.isDown) {
+    player.setVelocityX(-160);
+
+    player.anims.play('left', true);
+  }
+  else if (cursors.right.isDown) {
+    player.setVelocityX(160);
+
+    player.anims.play('right', true);
+  }
+  else {
+    player.setVelocityX(0);
+
+    player.anims.play('turn');
+  }
+
+  if (cursors.up.isDown && player.body.touching.down) {
+    player.setVelocityY(-330);
+  }
 }
