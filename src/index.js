@@ -99,6 +99,11 @@ function create() {
       repeat: -1
   });
 
+  //reset button
+  button = this.add.image(380, 30, 'button');
+  button.setScale(.03);
+  button.setInteractive();
+
   //keyboard function (up, down, left, right)
   cursors = this.input.keyboard.createCursorKeys();
 
@@ -140,23 +145,23 @@ function create() {
 }
 
 function update() {
-  if (gameOver) {
-    //reset button
-    button = this.add.image(400, 300, 'button');
-    button.setScale(.07);
-    button.setInteractive();
-    button.on('pointerup', () => {
-      //set high score
-      if(score > highScore){
-        highScore = score;
-        highScoreText.setText('high score: ' + highScore);
-      }
-      //reset score
-      score = 0;
-      scoreText.setText('score: ' + score);
-    });
-    return;
-  }
+  // if (gameOver) {
+  //   //reset button
+  //   // button = this.add.image(400, 300, 'button');
+  //   // button.setScale(.07);
+  //   // button.setInteractive();
+  //   button.on('pointerdown', () => {
+  //     //set high score
+  //     if(score > highScore){
+  //       highScore = score;
+  //       highScoreText.setText('high score: ' + highScore);
+  //     }
+  //     //reset score
+  //     score = 0;
+  //     scoreText.setText('score: ' + score);
+  //   });
+  //   return;
+  // }
 
   //player movement
   if (cursors.left.isDown) {
@@ -208,5 +213,17 @@ function hitBomb (player, bomb) {
   player.setTint(0xff0000); //turns the player red
   player.anims.play('turn');
   gameOver = true;
+  button.on('pointerdown', () => {
+    //set high score
+    if(score > highScore){
+      highScore = score;
+      highScoreText.setText('high score: ' + highScore);
+    }
+    //reset score
+    score = 0;
+    scoreText.setText('score: ' + score);
+    this.physics.resume();
+    player.clearTint();
+  });
 }
 
