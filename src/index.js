@@ -111,6 +111,13 @@ function create() {
   //bombs
   bombs = this.physics.add.group();
 
+  let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+  let bomb = bombs.create(x, 16, 'bomb');
+  bomb.setBounce(1);
+  bomb.setCollideWorldBounds(true);
+  bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+  bomb.allowGravity = false;
+
   //score diplayed
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -144,14 +151,14 @@ function update() {
     player.setVelocityX(0);
     player.anims.play('turn');
   }
-  // if (cursors.up.isDown && player.body.touching.down) {
-  //   //player can only jump off the ground
-  //   player.setVelocityY(-430);
-  // }
-  if (cursors.up.isDown) {
-    //player can jump mid air
-    player.setVelocityY(-200);
+  if (cursors.up.isDown && player.body.touching.down) {
+    //player can only jump off the ground
+    player.setVelocityY(-430);
   }
+  // if (cursors.up.isDown) {
+  //   //player can jump mid air
+  //   player.setVelocityY(-200);
+  // }
 }
 
 function collectStar (player, star) {
@@ -165,14 +172,13 @@ function collectStar (player, star) {
     stars.children.iterate(function (child) {
       child.enableBody(true, child.x, 0, true, true);
     });
-
+    //A new bomb drops each round
     let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-    let bomb = bombs.create(x, 16, 'bomb');
-    bomb.setBounce(1);
-    bomb.setCollideWorldBounds(true);
-    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-    bomb.allowGravity = false;
+    let newBomb = bombs.create(x, 16, 'bomb');
+    newBomb.setBounce(1);
+    newBomb.setCollideWorldBounds(true);
+    newBomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    newBomb.allowGravity = false;
   }
 }
 
